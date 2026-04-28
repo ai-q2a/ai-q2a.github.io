@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>خريطة الموقع - سؤال وجواب AI</title>
+</head>
+<body>
+    <h1>خريطة الموقع</h1>
+    <ul id="sitemap-list"></ul>
+
+    <script>
+        fetch('https://api.github.com/repos/ai-q2a/ai-q2a.github.io/contents/')
+        .then(res => res.json())
+        .then(data => {
+            const list = document.getElementById('sitemap-list');
+            data.forEach(item => {
+                if(item.name.endsWith('.html') && item.name !== "index.html") {
+                    list.innerHTML += `<li><a href="${item.name}">${item.name}</a></li>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
