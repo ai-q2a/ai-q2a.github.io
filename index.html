@@ -10,11 +10,13 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
 
+    <!-- Header -->
     <header class="p-6 bg-white shadow-sm border-b">
-        <h1 class="text-indigo-900 font-bold text-2xl text-center cursor-pointer" onclick="location.href='/'">سؤال وجواب AI</h1>
+        <h1 class="text-indigo-900 font-bold text-2xl text-center">سؤال وجواب AI</h1>
     </header>
 
     <main>
+        <!-- قسم البحث -->
         <section class="bg-indigo-900 text-white py-16 text-center">
             <h2 class="text-2xl md:text-3xl font-bold mb-8">موسوعة الإجابات الذكية.. اسأل الآن</h2>
             <div class="max-w-2xl mx-auto px-4">
@@ -25,20 +27,22 @@
             </div>
         </section>
 
+        <!-- منطقة الرد -->
         <article id="response" class="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-sm border border-gray-200 min-h-[150px] leading-relaxed">
             أهلاً بك، ابدأ بطرح سؤالك ليقوم الذكاء الاصطناعي بالرد عليك فوراً.
         </article>
 
+        <!-- قسم عرض ملفات ومجلدات GitHub -->
         <section class="max-w-4xl mx-auto mt-16 pb-20 px-4">
-            <h2 class="text-xl font-bold mb-6 text-gray-800 border-r-4 border-indigo-600 pr-3">الأقسام المتاحة</h2>
+            <h2 class="text-xl font-bold mb-6 text-gray-800 border-r-4 border-indigo-600 pr-3">محتويات المستودع</h2>
             <div id="repo-list" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <p class="col-span-full text-gray-500 text-center">جاري تحميل الأقسام...</p>
+                <p class="col-span-full text-gray-500 text-center">جاري جلب الملفات من المستودع...</p>
             </div>
         </section>
     </main>
 
     <script>
-        // دالة السؤال
+        // دالة السؤال للذكاء الاصطناعي
         async function askAI() {
             const prompt = document.getElementById('userInput').value;
             const resDiv = document.getElementById('response');
@@ -47,10 +51,10 @@
             try {
                 const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
                 resDiv.innerText = await res.text();
-            } catch (err) { resDiv.innerText = "حدث خطأ، حاول مرة أخرى."; }
+            } catch (err) { resDiv.innerText = "حدث خطأ في الاتصال."; }
         }
 
-        // دالة جلب المجلدات
+        // دالة جلب الملفات والمجلدات من GitHub
         async function fetchGitHubFiles() {
             const url = `https://api.github.com/repos/ai-q2a/ai-q2a.github.io/contents/`;
             const list = document.getElementById('repo-list');
@@ -60,22 +64,23 @@
                 const data = await response.json();
                 list.innerHTML = ""; 
                 
-                // استبعاد الملفات واختيار المجلدات فقط
-                const folders = data.filter(item => item.type === "dir" && item.name !== ".github");
-                
-                folders.forEach(item => {
-                    // الرابط المباشر للموقع
-                    const folderUrl = `https://ai-q2a.github.io/${item.name}/`;
+                // عرض جميع الملفات والمجلدات
+                data.forEach(item => {
+                    // استبعاد ملفات النظام والملف الرئيسي
+                    if(item.name === "index.html" || item.name === ".git" || item.name === ".github" || item.name === "README.md") return;
+
+                    const icon = item.type === "dir" ? "📁" : "📄";
                     
+                    // الرابط هنا يوجه لصفحة الملف على GitHub مباشرة (لا يسبب 404)
                     list.innerHTML += `
-                        <a href="${folderUrl}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-indigo-400 hover:shadow-md transition text-center block">
-                            <span class="text-indigo-600 text-3xl mb-2 block">📁</span>
-                            <span class="font-bold text-gray-700">${item.name}</span>
+                        <a href="${item.html_url}" target="_blank" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-indigo-400 hover:shadow-md transition text-center block">
+                            <span class="text-indigo-600 text-3xl mb-2 block">${icon}</span>
+                            <span class="font-bold text-gray-700 text-sm break-words">${item.name}</span>
                         </a>
                     `;
                 });
             } catch(e) { 
-                list.innerHTML = "<p class='col-span-full text-red-500'>تعذر تحميل الأقسام.</p>";
+                list.innerHTML = "<p class='col-span-full text-red-500'>تعذر تحميل الملفات من المستودع.</p>";
             }
         }
 
