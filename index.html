@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>سؤال وجواب AI | اسأل الذكاء الاصطناعي أونلاين</title>
+    <meta name="description" content="منصة سؤال وجواب AI، اسأل الذكاء الاصطناعي واحصل على إجابات فورية ودقيقة. استكشف أقسام البرمجة، الصحة، والعلوم بسهولة.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Header بدون زر -->
+    <header class="p-5 bg-white shadow-sm">
+        <h1 class="text-indigo-900 font-bold text-xl text-center">سؤال وجواب AI</h1>
+    </header>
+
+    <main>
+        <section class="bg-indigo-900 text-white py-20 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">موسوعة الإجابات الذكية.. اسأل الآن</h2>
+            
+            <div class="max-w-2xl mx-auto px-4">
+                <div class="bg-white p-2 rounded-full flex shadow-lg">
+                    <input id="userInput" type="text" aria-label="صندوق البحث" placeholder="اكتب سؤالك هنا..." class="w-full p-4 text-gray-700 outline-none rounded-r-full pr-6">
+                    <button onclick="askAI()" class="bg-indigo-600 px-8 rounded-full text-white hover:bg-indigo-500 transition">اسأل</button>
+                </div>
+            </div>
+        </section>
+
+        <article id="response" class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-sm border border-gray-200 min-h-[150px]">
+            أهلاً بك، ابدأ بطرح سؤالك ليقوم الذكاء الاصطناعي بالرد عليك فوراً.
+        </article>
+
+        <section class="max-w-4xl mx-auto mt-16 pb-20">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">استكشف التخصصات من GitHub</h2>
+            <div id="repo-list" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Data loaded via JS -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        async function askAI() {
+            const prompt = document.getElementById('userInput').value;
+            const resDiv = document.getElementById('response');
+            if(!prompt) return;
+            resDiv.innerText = "جاري البحث عن إجابة...";
+            try {
+                const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
+                resDiv.innerText = await res.text();
+            } catch (err) {
+                resDiv.innerText = "حدث خطأ، حاول مرة أخرى.";
+            }
+        }
+
+        async function fetchGitHubFiles() {
+            const url = `https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO_NAME/contents/`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const list = document.getElementById('repo-list');
+                
+                data.forEach(item => {
+                    if(item.type === "dir") {
+                        list.innerHTML += `
+                            <a href="${item.html_url}" class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-indigo-200 transition text-center block">
+                                <span class="text-indigo-600 text-2xl mb-2 block">📁</span>
+                                <span class="font-bold text-gray-700">${item.name}</span>
+                            </a>
+                        `;
+                    }
+                });
+            } catch(e) { console.error("Error loading GitHub"); }
+        }
+        window.onload = fetchGitHubFiles;
+    </script>
+</body>
+</html>
