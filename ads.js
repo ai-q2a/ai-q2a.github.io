@@ -1,26 +1,22 @@
-// كود الإعلانات الموحد
-function loadAds() {
-    // يمكنك إضافة كود إعلان أدسنس هنا
-    const adCode = `
-        <div class="my-8 p-4 bg-gray-100 rounded-lg text-center border border-dashed border-gray-400">
-            <p class="text-sm text-gray-500 mb-2">إعلان</p>
-            <!-- ضع كود إعلان أدسنس هنا بين التعليقات -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-XXXXXXXXXXXX"
-                 data-ad-slot="XXXXXXXXXX"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+// ads.js - هذا الملف يضيف الإعلانات تلقائياً في الصفحات
+function injectAds() {
+    const adHTML = `
+        <div class="my-6 p-4 bg-yellow-50 border-2 border-dashed border-yellow-400 rounded-xl text-center">
+            <span class="text-xs font-bold text-yellow-600 uppercase">مساحة إعلانية تجريبية</span>
+            <p class="text-gray-700 text-sm mt-1">هذا الإعلان يتم جلبه من ملف ads.js تلقائياً</p>
         </div>
     `;
-    
-    // إدراج الإعلان في أماكن محددة
-    const targetElement = document.querySelector('article');
-    if (targetElement) {
-        targetElement.insertAdjacentHTML('beforeend', adCode);
+
+    // إضافة الإعلان قبل المحتوى
+    const article = document.querySelector('article');
+    if (article) {
+        // إضافة إعلان في الأعلى
+        article.insertAdjacentHTML('afterbegin', adHTML);
+        // إضافة إعلان في الأسفل
+        article.insertAdjacentHTML('beforeend', adHTML);
     }
 }
 
-window.onload = loadAds;
-```
+// تنفيذ الدالة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', injectAds);
