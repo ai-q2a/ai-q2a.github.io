@@ -1,24 +1,89 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تفسير حلم تساقط الأسنان | سؤال وجواب AI</title>
-    <meta name="description" content="تعرف على تفسير حلم تساقط الأسنان لابن سيرين وأهم دلالاته للعزباء والمتزوجة في منصة سؤال وجواب AI.">
-    <!-- الربط مع Tailwind للجماليات -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سؤال وجواب AI | مكتبة المحتوى</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
-<body class="bg-gray-50">
-    <nav class="p-5 bg-white shadow-sm text-center">
-        <a href="/" class="text-indigo-900 font-bold text-xl">سؤال وجواب AI</a>
-    </nav>
-    
-    <main class="max-w-3xl mx-auto p-6 bg-white mt-10 rounded-xl shadow-sm">
-        <h1 class="text-3xl font-bold mb-6">تفسير حلم تساقط الأسنان لابن سيرين</h1>
-        <!-- هنا تضع محتوى المقال الخاص بك -->
-        <div class="prose">
-            <p>محتوى المقال هنا...</p>
-        </div>
+<body class="bg-gray-50 text-gray-900">
+
+    <header class="p-6 bg-white shadow-sm border-b">
+        <h1 class="text-indigo-900 font-bold text-2xl text-center">سؤال وجواب AI</h1>
+    </header>
+
+    <main>
+        <section class="bg-indigo-900 text-white py-10 text-center">
+            <h2 class="text-2xl font-bold mb-4">ابحث أو اختر مقالاً</h2>
+            <div class="max-w-2xl mx-auto px-4">
+                <div class="bg-white p-2 rounded-full flex shadow-lg">
+                    <input id="userInput" type="text" placeholder="اكتب سؤالك..." class="w-full p-4 text-gray-700 outline-none rounded-r-full pr-6">
+                    <button onclick="askAI()" class="bg-indigo-600 px-8 rounded-full text-white font-bold">اسأل</button>
+                </div>
+            </div>
+        </section>
+
+        <article id="response" class="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-xl shadow-sm border border-gray-200 min-h-[300px] leading-relaxed">
+            أهلاً بك، اختر مقالاً من الأسفل أو اسأل الذكاء الاصطناعي.
+        </article>
+
+        <section class="max-w-4xl mx-auto mt-16 pb-20 px-4">
+            <h2 class="text-xl font-bold mb-6 text-gray-800 border-r-4 border-indigo-600 pr-3">المقالات المتاحة</h2>
+            <div id="repo-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <p>جاري تحميل المقالات...</p>
+            </div>
+        </section>
     </main>
+
+    <script>
+        // دالة جلب محتوى ملف من المستودع
+        async function loadContent(url, fileName) {
+            const resDiv = document.getElementById('response');
+            resDiv.innerHTML = "جاري تحميل: " + fileName + "...";
+            try {
+                // جلب المحتوى الخام للملف
+                const response = await fetch(url);
+                const text = await response.text();
+                resDiv.innerHTML = `<h2 class="text-2xl font-bold mb-4">${fileName.replace('.html', '')}</h2>` + text;
+            } catch (err) {
+                resDiv.innerText = "حدث خطأ أثناء تحميل المقال.";
+            }
+        }
+
+        async function fetchGitHubFiles() {
+            const url = `https://api.github.com/repos/ai-q2a/ai-q2a.github.io/contents/`;
+            const list = document.getElementById('repo-list');
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                list.innerHTML = "";
+                data.forEach(item => {
+                    if(item.name.endsWith('.html') && item.name !== "index.html") {
+                        list.innerHTML += `
+                            <button onclick="loadContent('${item.download_url}', '${item.name}')" 
+                                    class="text-right bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-indigo-400 transition w-full">
+                                📄 ${item.name.replace('.html', '')}
+                            </button>
+                        `;
+                    }
+                });
+            } catch(e) { list.innerHTML = "تعذر تحميل المقالات."; }
+        }
+
+        async function askAI() {
+            const prompt = document.getElementById('userInput').value;
+            const resDiv = document.getElementById('response');
+            if(!prompt) return;
+            resDiv.innerText = "جاري التفكير...";
+            try {
+                const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
+                resDiv.innerText = await res.text();
+            } catch (err) { resDiv.innerText = "حدث خطأ."; }
+        }
+
+        window.onload = fetchGitHubFiles;
+    </script>
 </body>
 </html>
