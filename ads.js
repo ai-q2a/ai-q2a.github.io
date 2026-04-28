@@ -1,22 +1,20 @@
-
-// ads.js - هذا الملف يضيف الإعلانات تلقائياً في الصفحات
 function injectAds() {
+    // نص الإعلان (يمكنك استبداله بكود أدسنس لاحقاً)
     const adHTML = `
-        <div class="my-6 p-4 bg-yellow-50 border-2 border-dashed border-yellow-400 rounded-xl text-center">
-            <span class="text-xs font-bold text-yellow-600 uppercase">مساحة إعلانية تجريبية</span>
-            <p class="text-gray-700 text-sm mt-1">هذا الإعلان يتم جلبه من ملف ads.js تلقائياً</p>
+        <div class="my-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-dashed border-indigo-200 rounded-xl text-center">
+            <p class="text-indigo-400 font-bold text-sm mb-2">إعلان تجريبي</p>
+            <p class="text-gray-600">هذا الإعلان يتم جلبه تلقائياً بواسطة ads.js</p>
         </div>
     `;
 
-    // إضافة الإعلان قبل المحتوى
     const article = document.querySelector('article');
     if (article) {
-        // إضافة إعلان في الأعلى
+        // إضافة إعلان فوق المقال
         article.insertAdjacentHTML('afterbegin', adHTML);
-        // إضافة إعلان في الأسفل
+        // إضافة إعلان تحت المقال
         article.insertAdjacentHTML('beforeend', adHTML);
     }
 }
 
-// تنفيذ الدالة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', injectAds);
+// تشغيل الدالة بعد تحميل الصفحة
+window.addEventListener('DOMContentLoaded', injectAds);
