@@ -1,12 +1,11 @@
-﻿<!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
     <title>سؤال وجواب AI | اسأل الذكاء الاصطناعي أونلاين</title>
-    <meta name="description" content="منصة سؤال وجواب AI، اسأل الذكاء الاصطناعي واحصل على إجابات فورية ودقيقة. استكشف أقسام البرمجة، الصحة، والعلوم بسهولة.">
+    <meta name="description" content="منصة سؤال وجواب AI، اسأل الذكاء الاصطناعي واحصل على إجابات فورية ودقيقة.">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
@@ -14,69 +13,86 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
 
-    <!-- Header بدون زر -->
+    <!-- Header -->
     <header class="p-5 bg-white shadow-sm">
         <h1 class="text-indigo-900 font-bold text-xl text-center">سؤال وجواب AI</h1>
     </header>
 
     <main>
-        <section class="bg-indigo-900 text-white py-20 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-8">موسوعة الإجابات الذكية.. اسأل الآن</h2>
+        <!-- القسم الرئيسي -->
+        <section class="bg-indigo-900 text-white py-16 text-center">
+            <h2 class="text-3xl font-bold mb-8">موسوعة الإجابات الذكية.. اسأل الآن</h2>
             
             <div class="max-w-2xl mx-auto px-4">
                 <div class="bg-white p-2 rounded-full flex shadow-lg">
-                    <input id="userInput" type="text" aria-label="صندوق البحث" placeholder="اكتب سؤالك هنا..." class="w-full p-4 text-gray-700 outline-none rounded-r-full pr-6">
+                    <input id="userInput" type="text" placeholder="اكتب سؤالك هنا..." class="w-full p-4 text-gray-700 outline-none rounded-r-full pr-6">
                     <button onclick="askAI()" class="bg-indigo-600 px-8 rounded-full text-white hover:bg-indigo-500 transition">اسأل</button>
                 </div>
             </div>
+
+            <!-- حاوية الوسوم التلقائية -->
+            <div id="tags-container" class="mt-8 flex flex-wrap justify-center gap-3 px-4">
+                <!-- يتم جلب الوسوم هنا تلقائياً -->
+                <p class="text-indigo-300 text-sm">جاري جلب المواضيع الأكثر بحثاً...</p>
+            </div>
         </section>
 
+        <!-- منطقة عرض الإجابة -->
         <article id="response" class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-sm border border-gray-200 min-h-[150px]">
             أهلاً بك، ابدأ بطرح سؤالك ليقوم الذكاء الاصطناعي بالرد عليك فوراً.
         </article>
-
-        <section class="max-w-4xl mx-auto mt-16 pb-20">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">استكشف التخصصات من GitHub</h2>
-            <div id="repo-list" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <!-- Data loaded via JS -->
-            </div>
-        </section>
     </main>
 
     <script>
-        async function askAI() {
-            const prompt = document.getElementById('userInput').value;
+        // 1. وظيفة السؤال للذكاء الاصطناعي
+        async function askAI(query = null) {
+            const input = document.getElementById('userInput');
+            const prompt = query || input.value;
             const resDiv = document.getElementById('response');
+            
             if(!prompt) return;
-            resDiv.innerText = "جاري البحث عن إجابة...";
+            
+            input.value = prompt;
+            resDiv.innerText = "جاري التفكير...";
+            
             try {
                 const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
-                resDiv.innerText = await res.text();
+                const data = await res.text();
+                resDiv.innerText = data;
             } catch (err) {
-                resDiv.innerText = "حدث خطأ، حاول مرة أخرى.";
+                resDiv.innerText = "عذراً، حدث خطأ في الاتصال.";
             }
         }
 
-        async function fetchGitHubFiles() {
-            const url = `https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO_NAME/contents/`;
+        // 2. جلب عناوين الملفات من GitHub كـ وسوم (Tags)
+        async function fetchTags() {
+            const url = `https://api.github.com/repos/ai-q2a/ai-q2a.github.io/contents/`;
+            const container = document.getElementById('tags-container');
+            
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                const list = document.getElementById('repo-list');
+                container.innerHTML = ''; // تفريغ التحميل
                 
                 data.forEach(item => {
-                    if(item.type === "dir") {
-                        list.innerHTML += `
-                            <a href="${item.html_url}" class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-indigo-200 transition text-center block">
-                                <span class="text-indigo-600 text-2xl mb-2 block">📁</span>
-                                <span class="font-bold text-gray-700">${item.name}</span>
-                            </a>
-                        `;
+                    // نختار ملفات الـ HTML فقط ونستثني index.html
+                    if(item.name.endsWith('.html') && item.name !== 'index.html') {
+                        const tagName = item.name.replace('.html', '').replace(/-/g, ' ');
+                        
+                        const tag = document.createElement('button');
+                        tag.className = "border border-white/30 px-4 py-1 rounded-full text-sm hover:bg-white hover:text-indigo-900 transition cursor-pointer";
+                        tag.innerText = "# " + tagName;
+                        tag.onclick = () => askAI(tagName);
+                        container.appendChild(tag);
                     }
                 });
-            } catch(e) { console.error("Error loading GitHub"); }
+            } catch(e) { 
+                container.innerHTML = "<p class='text-red-300'>تعذر تحميل الوسوم.</p>"; 
+            }
         }
-        window.onload = fetchGitHubFiles;
+
+        // تنفيذ الدوال عند التحميل
+        window.onload = fetchTags;
     </script>
 </body>
 </html>
