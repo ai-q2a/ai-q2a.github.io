@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الجمل - حساب القيمة العددية للنصوص العربية | سؤال وجواب AI</title>
+    <meta name="description" content="استخدم حاسبة الجمل لحساب القيمة العددية لأي نص عربي بدقة. أداة سريعة وسهلة لمعرفة حساب الجمل الكبير للحروف والكلمات.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <header class="p-6 bg-white shadow-sm text-center">
+        <a href="/" class="text-indigo-900 font-bold text-2xl">سؤال وجواب AI</a>
+    </header>
+
+    <main class="flex-grow max-w-2xl mx-auto p-6 my-10">
+        <div class="bg-white p-8 rounded-3xl shadow-xl border border-indigo-50 text-center">
+            <h1 class="text-2xl font-bold text-indigo-900 mb-6">حاسبة الجمل (حساب الجمل)</h1>
+            
+            <textarea id="inputArea" placeholder="اكتب النص العربي هنا..." class="w-full p-4 border rounded-xl mb-6 h-32 outline-indigo-500 text-lg"></textarea>
+            
+            <button onclick="calculateGematria()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition shadow-md text-lg">
+                احسب القيمة العددية
+            </button>
+
+            <div id="resultArea" class="hidden mt-8 p-6 bg-indigo-50 rounded-2xl border border-indigo-100">
+                <p class="text-gray-600 mb-2">القيمة العددية للنص هي:</p>
+                <p id="outputValue" class="text-5xl font-bold text-indigo-900"></p>
+            </div>
+        </div>
+
+        <article class="mt-12 text-gray-700 leading-relaxed bg-white p-8 rounded-2xl shadow">
+            <h2 class="text-xl font-bold mb-4">ما هي حاسبة الجمل؟</h2>
+            <p>هي أداة تعتمد على "حساب الجمل الكبير" حيث يُعطى لكل حرف أبجدي عربي قيمة رقمية محددة. تستخدم هذه الأداة في الأبحاث التراثية واللغوية.</p>
+        </article>
+    </main>
+
+    <script>
+        function calculateGematria() {
+            const values = {
+                'ا':1, 'ب':2, 'ج':3, 'د':4, 'ه':5, 'و':6, 'ز':7, 'ح':8, 'ط':9,
+                'ي':10, 'ك':20, 'ل':30, 'م':40, 'ن':50, 'س':60, 'ع':70, 'ف':80, 'ص':90,
+                'ق':100, 'ر':200, 'ش':300, 'ت':400, 'ث':500, 'خ':600, 'ذ':700, 'ض':800, 'ظ':900, 'غ':1000
+            };
+
+            const text = document.getElementById('inputArea').value;
+            let total = 0;
+
+            for (let char of text) {
+                if (values[char]) {
+                    total += values[char];
+                }
+            }
+
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('outputValue').innerText = total;
+        }
+    </script>
+</body>
+</html>
