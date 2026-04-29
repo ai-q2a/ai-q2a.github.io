@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إذاعة القرآن الكريم من القاهرة - بث مباشر | استمع الآن</title>
+    <meta name="description" content="استمع الآن إلى بث مباشر لإذاعة القرآن الكريم من القاهرة بأعلى جودة. تغطية صوتية مستمرة لبرامج وتلاوات الإذاعة المصرية.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <header class="p-6 bg-white shadow-sm text-center">
+        <a href="/" class="text-indigo-900 font-bold text-2xl">سؤال وجواب AI</a>
+    </header>
+
+    <main class="max-w-2xl mx-auto p-6 my-10">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl border border-indigo-100 text-center">
+            <h1 class="text-2xl font-bold text-indigo-900 mb-6">إذاعة القرآن الكريم من القاهرة</h1>
+            
+            <div class="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="text-4xl">📻</span>
+            </div>
+
+            <!-- مشغل الراديو -->
+            <audio controls class="w-full mb-8">
+                <source src="https://stream.radiojar.com/8s5u5tpdtwzuv" type="audio/mpeg">
+                متصفحك لا يدعم مشغل الصوت.
+            </audio>
+
+            <!-- أزرار المشاركة -->
+            <div class="flex justify-center gap-4">
+                <button onclick="share('whatsapp')" class="bg-green-500 text-white px-5 py-2 rounded-full font-bold hover:bg-green-600 transition">واتساب</button>
+                <button onclick="share('facebook')" class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold hover:bg-blue-700 transition">فيسبوك</button>
+                <button onclick="share('twitter')" class="bg-black text-white px-5 py-2 rounded-full font-bold hover:bg-gray-800 transition">X (تويتر)</button>
+            </div>
+        </div>
+
+        <article class="mt-12 text-gray-700 leading-relaxed bg-white p-8 rounded-2xl shadow">
+            <h2 class="text-xl font-bold mb-4">نبذة عن الإذاعة</h2>
+            <p>تعد إذاعة القرآن الكريم من القاهرة من أقدم وأهم الإذاعات التي تبث التلاوات القرآنية والبرامج الدينية على مستوى العالم الإسلامي. يمكنك الآن الاستماع إلى البث المباشر في أي وقت ومن أي مكان عبر موقعنا.</p>
+        </article>
+    </main>
+
+    <script>
+        function share(platform) {
+            const url = window.location.href;
+            const text = "استمع الآن إلى إذاعة القرآن الكريم من القاهرة عبر سؤال وجواب AI";
+            let shareUrl = "";
+            
+            if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+            if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+            
+            window.open(shareUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
