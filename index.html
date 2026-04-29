@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سؤال وجواب AI | موسوعة الذكاء الاصطناعي</title>
-    <meta name="description" content="موسوعة سؤال وجواب AI، آلاف المقالات والإجابات الدقيقة من الذكاء الاصطناعي في كافة المجالات.">
-        <script src="/ads.js" defer></script>
-
+    <title>سؤال وجواب AI | موسوعة المعرفة والذكاء الاصطناعي</title>
+    <meta name="description" content="منصة سؤال وجواب AI، استكشف آلاف المقالات والإجابات الدقيقة المدعومة بالذكاء الاصطناعي.">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- استيراد الفهرس الذي يتم تحديثه تلقائياً -->
+    <script src="articles.js"></script> 
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Cairo', sans-serif; }</style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
 
-    <header class="p-6 bg-white shadow-sm border-b">
-        <h1 class="text-indigo-900 font-bold text-2xl text-center">سؤال وجواب AI</h1>
+    <header class="p-6 bg-white shadow-sm border-b text-center">
+        <h1 class="text-indigo-900 font-bold text-2xl">سؤال وجواب AI</h1>
     </header>
 
-    <main class="max-w-5xl mx-auto p-4">
+    <main class="flex-grow max-w-5xl mx-auto p-4 w-full">
         <!-- قسم البحث بالذكاء الاصطناعي -->
-        <section class="bg-indigo-900 text-white py-12 rounded-2xl text-center my-8 shadow-xl">
+        <section class="bg-indigo-900 text-white py-10 rounded-2xl text-center my-8 shadow-xl">
             <h2 class="text-2xl font-bold mb-6">اسأل الذكاء الاصطناعي</h2>
             <div class="max-w-xl mx-auto px-4">
                 <div class="bg-white p-2 rounded-full flex shadow-lg">
@@ -29,82 +31,73 @@
             </div>
         </section>
 
-        <article id="response" class="hidden max-w-4xl mx-auto my-6 p-8 bg-white rounded-xl shadow-sm border border-indigo-100 leading-relaxed text-gray-800">
-        </article>
+        <article id="response" class="hidden max-w-4xl mx-auto my-6 p-8 bg-white rounded-xl shadow-sm border border-indigo-100 leading-relaxed text-gray-800"></article>
 
-        <!-- قسم المقالات مع البحث الحي -->
-        <section class="mt-16 mb-20">
+        <!-- قسم المقالات -->
+        <section class="mt-16 mb-10">
             <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <h2 class="text-xl font-bold text-gray-800 border-r-4 border-indigo-600 pr-3">المقالات المتاحة</h2>
-                <input type="text" id="searchArticles" onkeyup="filterArticles()" 
-                       placeholder="🔍 ابحث في آلاف المقالات..." 
-                       class="p-3 border border-gray-300 rounded-full w-full md:w-96 shadow-sm outline-indigo-500 pr-4">
+                <input type="text" id="search" onkeyup="render()" placeholder="🔍 ابحث في آلاف المقالات..." class="p-3 border rounded-full w-full md:w-96 shadow-sm outline-indigo-500 pr-4">
             </div>
             
-            <div id="repo-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <p class="text-gray-500 col-span-full text-center">جاري تحميل الموسوعة...</p>
+            <div id="list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- يتم التعبئة عبر JS -->
             </div>
+            
+            <div id="pagination" class="flex justify-center gap-2 mt-10"></div>
         </section>
     </main>
 
-    <footer class="bg-white border-t py-8 text-center">
-        <p class="text-gray-600 font-bold">سؤال وجواب AI &copy; 2026</p>
+    <footer class="bg-white border-t py-8 text-center mt-auto">
+        <div class="max-w-4xl mx-auto px-4">
+            <p class="text-gray-600 font-bold text-lg mb-2">سؤال وجواب AI</p>
+            <p class="text-gray-500 text-sm">&copy; 2026 جميع الحقوق محفوظة - منصة الذكاء الاصطناعي التفاعلية</p>
+            <div class="mt-4 flex justify-center gap-4 text-indigo-600 text-sm font-semibold">
+                <a href="/" class="hover:underline">الرئيسية</a>
+                <span>|</span>
+                <a href="#" class="hover:underline">سياسة الخصوصية</a>
+            </div>
+        </div>
     </footer>
 
     <script>
-        let allArticles = [];
+        let currentPage = 1;
+        const perPage = 12;
 
-        // دالة السؤال للذكاء الاصطناعي
+        function render() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const filtered = articleList.filter(name => name.toLowerCase().includes(query));
+            
+            const start = (currentPage - 1) * perPage;
+            const paginated = filtered.slice(start, start + perPage);
+            
+            const list = document.getElementById('list');
+            list.innerHTML = paginated.map(name => `
+                <a href="${name}" class="p-5 bg-white border border-gray-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition flex items-center">
+                    <span class="text-indigo-600 ml-2">📄</span>
+                    <span class="font-bold text-gray-700">${name.replace('.html', '').replace(/-/g, ' ')}</span>
+                </a>
+            `).join('');
+            
+            const pages = Math.ceil(filtered.length / perPage);
+            document.getElementById('pagination').innerHTML = Array.from({length: pages}, (_, i) => 
+                `<button onclick="currentPage=${i+1}; render()" class="px-4 py-2 ${currentPage === i+1 ? 'bg-indigo-600 text-white' : 'bg-gray-200'} rounded-lg">${i+1}</button>`
+            ).join('');
+        }
+
         async function askAI() {
             const prompt = document.getElementById('userInput').value;
             const resDiv = document.getElementById('response');
-            const btn = document.getElementById('askBtn');
             if(!prompt) return;
             resDiv.classList.remove('hidden');
             resDiv.innerText = "جاري التفكير...";
-            btn.disabled = true;
             try {
                 const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
                 resDiv.innerText = await res.text();
             } catch (err) { resDiv.innerText = "حدث خطأ."; }
-            finally { btn.disabled = false; }
         }
 
-        // دالة جلب المقالات (مرة واحدة فقط)
-        async function fetchArticles() {
-            try {
-                const res = await fetch(`https://api.github.com/repos/ai-q2a/ai-q2a.github.io/contents/`);
-                const data = await res.json();
-                allArticles = data.filter(item => item.name.endsWith('.html') && item.name !== "index.html");
-                renderArticles(allArticles.slice(0, 15)); // عرض أول 15 مقالاً
-            } catch(e) { 
-                document.getElementById('repo-list').innerHTML = "<p class='text-red-500'>تعذر تحميل المقالات.</p>";
-            }
-        }
-
-        // دالة العرض
-        function renderArticles(articles) {
-            const list = document.getElementById('repo-list');
-            if(articles.length === 0) {
-                list.innerHTML = "<p class='col-span-full text-center text-gray-500'>لا توجد نتائج تطابق بحثك.</p>";
-                return;
-            }
-            list.innerHTML = articles.map(item => `
-                <a href="${item.name}" class="block p-5 bg-white border border-gray-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition">
-                    <h3 class="font-bold text-indigo-900 truncate">${item.name.replace('.html', '').replace(/-/g, ' ')}</h3>
-                    <span class="text-xs text-indigo-500 mt-2 block">اقرأ المزيد ←</span>
-                </a>
-            `).join('');
-        }
-
-        // دالة البحث الحي
-        function filterArticles() {
-            const query = document.getElementById('searchArticles').value.toLowerCase();
-            const filtered = allArticles.filter(item => item.name.toLowerCase().includes(query));
-            renderArticles(filtered.slice(0, 30)); // عرض حتى 30 نتيجة بحث
-        }
-
-        window.onload = fetchArticles;
+        window.onload = render;
     </script>
 </body>
 </html>
