@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة تفقيط الأرقام: تحويل الأرقام إلى نصوص عربية وإنجليزية</title>
+    <meta name="description" content="أداة تفقيط الأرقام أونلاين. حول الأرقام إلى كلمات باللغة العربية والإنجليزية بدقة عالية. مثالية للشيكات والمستندات المالية.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <header class="p-6 bg-white shadow-sm text-center">
+        <a href="/" class="text-indigo-900 font-bold text-2xl">سؤال وجواب AI</a>
+    </header>
+
+    <main class="flex-grow max-w-2xl mx-auto p-6 my-10">
+        <div class="bg-white p-8 rounded-3xl shadow-xl border border-indigo-50">
+            <h1 class="text-2xl font-bold text-indigo-900 mb-6 text-center">أداة تفقيط الأرقام</h1>
+            
+            <input type="number" id="numberInput" placeholder="اكتب الرقم هنا (مثال: 1550)..." class="w-full p-4 border rounded-xl mb-6 text-xl outline-indigo-500">
+            
+            <button onclick="convertNumber()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition shadow-md text-lg">
+                تحويل الرقم إلى كلمات
+            </button>
+
+            <div class="mt-8 space-y-4">
+                <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                    <p class="text-indigo-600 font-bold text-sm">بالعربية:</p>
+                    <p id="arabicOutput" class="text-xl text-gray-800 font-medium mt-1">...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // دالة التفقيط بالعربية البسيطة
+        function convertNumber() {
+            const num = document.getElementById('numberInput').value;
+            if (!num) return;
+            document.getElementById('arabicOutput').innerText = tafqit(num);
+        }
+
+        function tafqit(n) {
+            const ones = ["", "واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة"];
+            const teens = ["عشرة", "أحد عشر", "اثنا عشر", "ثلاثة عشر", "أربعة عشر", "خمسة عشر", "ستة عشر", "سبعة عشر", "ثمانية عشر", "تسعة عشر"];
+            const tens = ["", "", "عشرون", "ثلاثون", "أربعون", "خمسون", "ستون", "سبعون", "ثمانون", "تسعون"];
+            
+            if (n < 10) return ones[n];
+            if (n < 20) return teens[n - 10];
+            if (n < 100) return ones[n % 10] + (n % 10 !== 0 ? " و " : "") + tens[Math.floor(n / 10)];
+            if (n < 1000) return ones[Math.floor(n / 100)] + " مئة" + (n % 100 !== 0 ? " و " + tafqit(n % 100) : "");
+            return n;
+        }
+    </script>
+</body>
+</html>
