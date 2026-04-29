@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مترجم الفرانكو الاحترافي - تحويل فرانكو لعربي وعربي لفرانكو</title>
+    <meta name="description" content="أفضل مترجم فرانكو أونلاين. يمكنك الآن تحويل النصوص من الفرانكو إلى اللغة العربية ومن العربية إلى لغة الفرانكو بسهولة وبسرعة.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <header class="p-6 bg-white shadow-sm text-center">
+        <a href="/" class="text-indigo-900 font-bold text-2xl">سؤال وجواب AI</a>
+    </header>
+
+    <main class="max-w-3xl mx-auto p-6">
+        <!-- أداة المترجم -->
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-indigo-100">
+            <h1 class="text-2xl font-bold text-indigo-900 mb-6 text-center">مترجم الفرانكو (Franco Translator)</h1>
+            
+            <textarea id="inputArea" placeholder="اكتب النص هنا للترجمة..." class="w-full p-4 border rounded-xl mb-4 h-32 outline-indigo-500"></textarea>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="francoToArabic()" class="bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700">من فرانكو إلى عربي</button>
+                <button onclick="arabicToFranco()" class="bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700">من عربي إلى فرانكو</button>
+            </div>
+
+            <textarea id="outputArea" readonly placeholder="النتيجة..." class="w-full p-4 bg-gray-50 border rounded-xl h-32"></textarea>
+        </div>
+
+        <!-- أزرار المشاركة -->
+        <div class="flex justify-center gap-4 my-8">
+            <button onclick="window.print()" class="bg-gray-800 text-white px-6 py-2 rounded-lg">طباعة</button>
+            <button onclick="sharePage()" class="bg-blue-600 text-white px-6 py-2 rounded-lg">مشاركة على واتساب</button>
+        </div>
+
+        <!-- محتوى SEO -->
+        <article class="prose lg:prose-xl mt-12 text-gray-700 leading-relaxed">
+            <h2>ما هو مترجم الفرانكو؟</h2>
+            <p>لغة الفرانكو هي وسيلة كتابة تستخدم الحروف اللاتينية والأرقام لتمثيل أصوات اللغة العربية. مترجمنا يوفر لك تحويلاً لحظياً ومباشراً.</p>
+            <h3>كيفية استخدام المترجم؟</h3>
+            <p>فقط ضع النص في المربع العلوي واضغط على زر التحويل المطلوب، وسيتكفل موقعنا بمعالجة الحروف بدقة.</p>
+        </article>
+    </main>
+
+    <script>
+        // القواميس والوظائف التي زودتني بها
+        const francoMap = {'gh':'غ','kh':'خ','sh':'ش','th':'ث','dh':'ذ','zh':'ژ','2':'ء','3':'ع','4':'ش','5':'خ','6':'ط','7':'ح','8':'ق','9':'ص','a':'ا','b':'ب','c':'ك','d':'د','e':'ي','f':'ف','g':'ج','h':'ه','i':'ي','j':'ج','k':'ك','l':'ل','m':'م','n':'ن','o':'و','p':'ب','q':'ق','r':'ر','s':'س','t':'ت','u':'و','v':'ف','w':'و','x':'كس','y':'ي','z':'ز'};
+        const arabicMap = {'ا':'a','أ':'2','إ':'e','آ':'a','ب':'b','ت':'t','ث':'th','ج':'g','ح':'7','خ':'5','د':'d','ذ':'z','ر':'r','ز':'z','س':'s','ش':'sh','ص':'9','ض':'d','ط':'6','ظ':'z','ع':'3','غ':'gh','ف':'f','ق':'8','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','ة':'a','و':'w','ي':'y','ى':'a','ء':'2','ئ':'e','ؤ':'o'};
+
+        function francoToArabic() {
+            let text = document.getElementById('inputArea').value.toLowerCase();
+            let sortedKeys = Object.keys(francoMap).sort((a, b) => b.length - a.length);
+            sortedKeys.forEach(key => { text = text.split(key).join(francoMap[key]); });
+            document.getElementById('outputArea').value = text;
+        }
+
+        function arabicToFranco() {
+            let text = document.getElementById('inputArea').value;
+            let result = '';
+            for (let char of text) { result += arabicMap[char] || char; }
+            document.getElementById('outputArea').value = result;
+        }
+
+        function sharePage() {
+            const url = window.location.href;
+            window.open(`https://wa.me/?text=جرب هذا المترجم الرائع للفرانكو: ${url}`, '_blank');
+        }
+    </script>
+</body>
+</html>
