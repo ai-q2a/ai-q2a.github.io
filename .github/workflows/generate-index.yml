@@ -7,21 +7,19 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # هنا قمنا بدمج كل خيارات الهروب من التحذيرات التي طلبتها GitHub
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-      
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Generate Index and Sitemap
         run: |
+          # إنشاء articles.js
           echo "const articleList = [" > articles.js
           find . -name "*.html" ! -name "index.html" -printf '"%f",\n' >> articles.js
           echo "];" >> articles.js
 
+          # إنشاء sitemap.xml
           echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
           echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
           find . -name "*.html" -printf '<url><loc>https://ai-q2a.github.io/%p</loc></url>\n' | sed 's/\.\///g' >> sitemap.xml
