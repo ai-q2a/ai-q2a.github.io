@@ -7,8 +7,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # إضافة هذا السطر لإخبار GitHub أنك تسمح باستخدام الإصدارات الحالية
+    # هنا قمنا بدمج كل خيارات الهروب من التحذيرات التي طلبتها GitHub
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       
     steps:
