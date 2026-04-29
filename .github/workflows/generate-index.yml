@@ -4,31 +4,45 @@ on: [push]
 permissions:
   contents: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Generate Index and Sitemap
         run: |
-          # إنشاء articles.js
+          echo "Generating articles.js and sitemap.xml..."
+
+          # إنشاء articles.js (مع مسارات كاملة)
           echo "const articleList = [" > articles.js
-          find . -name "*.html" ! -name "index.html" -printf '"%f",\n' >> articles.js
+          find . -type f -name "*.html" ! -name "index.html" \
+          | sed 's|^\./||' \
+          | sort \
+          | awk '{printf "\"%s\",\n", $0}' >> articles.js
           echo "];" >> articles.js
 
-          # إنشاء sitemap.xml
+          # إنشاء sitemap.xml بشكل نظيف
           echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
           echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
-          find . -name "*.html" -printf '<url><loc>https://ai-q2a.github.io/%p</loc></url>\n' | sed 's/\.\///g' >> sitemap.xml
+
+          find . -type f -name "*.html" \
+          | sed 's|^\./||' \
+          | sort \
+          | awk '{printf "<url><loc>https://ai-q2a.github.io/%s</loc></url>\n", $0}' >> sitemap.xml
+
           echo '</urlset>' >> sitemap.xml
 
       - name: Commit and Push
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
           git add articles.js sitemap.xml
-          git commit -m "تحديث الفهرس وخريطة الموقع تلقائياً" || echo "لا توجد تغييرات"
+          git commit -m "تحديث تلقائي للفهرس وخريطة الموقع" || echo "لا توجد تغييرات"
           git push
