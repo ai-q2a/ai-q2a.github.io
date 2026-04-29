@@ -7,9 +7,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # إضافة هذا السطر لإجبار الـ Action على استخدام Node 24 وتجنب التحذيرات
+    # إضافة هذا السطر لإخبار GitHub أنك تسمح باستخدام الإصدارات الحالية
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       
     steps:
       - name: Checkout code
@@ -17,12 +17,10 @@ jobs:
 
       - name: Generate Index and Sitemap
         run: |
-          # إنشاء articles.js
           echo "const articleList = [" > articles.js
           find . -name "*.html" ! -name "index.html" -printf '"%f",\n' >> articles.js
           echo "];" >> articles.js
 
-          # إنشاء sitemap.xml
           echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
           echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
           find . -name "*.html" -printf '<url><loc>https://ai-q2a.github.io/%p</loc></url>\n' | sed 's/\.\///g' >> sitemap.xml
