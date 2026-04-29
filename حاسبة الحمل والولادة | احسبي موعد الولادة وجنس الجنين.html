@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الحمل والولادة | احسبي موعد الولادة وجنس الجنين</title>
+    <meta name="description" content="أداة حاسبة الحمل والولادة الدقيقة. احسبي تاريخ الولادة المتوقع ومراحل نمو الجنين بسهولة ودقة عالية.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+    <script src="/ads.js" defer></script>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <header class="p-6 bg-white shadow-sm text-center">
+        <a href="/" class="text-indigo-900 font-bold text-2xl">سؤال وجواب AI</a>
+    </header>
+
+    <main class="flex-grow max-w-2xl mx-auto p-6 my-10">
+        <div class="bg-white p-8 rounded-3xl shadow-xl border border-pink-100">
+            <h1 class="text-2xl font-bold text-pink-700 mb-6 text-center">حاسبة الحمل والولادة</h1>
+            
+            <label class="block text-sm font-bold text-gray-600 mb-2">أول يوم لآخر دورة شهرية:</label>
+            <input type="date" id="lastPeriod" class="w-full p-4 border rounded-xl mb-6 outline-pink-500">
+            
+            <button onclick="calculatePregnancy()" class="w-full bg-pink-600 text-white font-bold py-4 rounded-xl hover:bg-pink-700 transition shadow-md text-lg">
+                احسبي موعد الولادة
+            </button>
+
+            <div id="resultArea" class="hidden mt-8 p-6 bg-pink-50 rounded-2xl border border-pink-100 text-center">
+                <p class="text-gray-600">تاريخ الولادة المتوقع هو:</p>
+                <p id="dueDate" class="text-3xl font-bold text-pink-800 my-4"></p>
+                <p id="weekInfo" class="text-pink-600 font-bold"></p>
+            </div>
+        </div>
+
+        <article class="mt-12 bg-white p-8 rounded-2xl shadow border text-gray-700 leading-relaxed">
+            <h2 class="text-xl font-bold mb-4 text-pink-700">ملاحظة هامة:</h2>
+            <p>هذه الحاسبة تعطي تقديراً مبدئياً لموعد الولادة بناءً على حسابات طبية عامة. يرجى دائماً مراجعة الطبيب المختص للمتابعة الدقيقة للحمل.</p>
+        </article>
+    </main>
+
+    <footer class="bg-white border-t py-8 text-center mt-auto">
+        <p class="text-gray-500 text-sm">&copy; 2026 جميع الحقوق محفوظة - سؤال وجواب AI</p>
+    </footer>
+
+    <script>
+        function calculatePregnancy() {
+            const lastPeriod = new Date(document.getElementById('lastPeriod').value);
+            if (!lastPeriod || isNaN(lastPeriod)) return alert("يرجى اختيار تاريخ صحيح");
+
+            // حساب موعد الولادة (تاريخ الدورة + 280 يوم - أي 40 أسبوع)
+            const dueDate = new Date(lastPeriod.getTime() + (280 * 24 * 60 * 60 * 1000));
+            
+            // حساب الأسابيع الحالية
+            const today = new Date();
+            const diffTime = Math.abs(today - lastPeriod);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const weeks = Math.floor(diffDays / 7);
+            const days = diffDays % 7;
+
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('dueDate').innerText = dueDate.toLocaleDateString('ar-EG');
+            document.getElementById('weekInfo').innerText = `أنتِ الآن في الأسبوع ${weeks} و ${days} يوم من الحمل.`;
+        }
+    </script>
+</body>
+</html>
